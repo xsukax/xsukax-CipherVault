@@ -1,0 +1,4 @@
+fastapi==0.128.2
+uvicorn==0.48.0
+cryptography==46.0.4
+argon2-cffi==25.1.0

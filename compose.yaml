@@ -1,0 +1,25 @@
+services:
+  vault:
+    build: .
+    image: xsukax-ciphervault:local
+    restart: unless-stopped
+    init: true
+    user: "10001:10001"
+    env_file: .env
+    ports:
+      - "127.0.0.1:${VAULT_PORT:-8743}:8000"
+    volumes:
+      - ./appdata:/data:rw
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

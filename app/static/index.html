@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>xsukax CipherVault · Private encrypted storage</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+<div class="app-frame">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="CipherVault home">
+      <span class="brand-mark" aria-hidden="true">◆</span>
+      <span><strong>xsukax</strong><small>CipherVault</small></span>
+    </a>
+    <div class="top-right"><span class="connection"><span class="status-dot"></span> Passwords stay in your browser</span><button id="logoutBtn" class="button ghost tiny" hidden>Sign out</button></div>
+  </header>
+  <main id="app" class="main-content" aria-live="polite"></main>
+  <footer class="footer">AES-256-GCM in your browser <span>·</span> ChaCha20-Poly1305 on the server <span>·</span> Original filenames encrypted</footer>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<dialog id="downloadDialog" class="modal" aria-labelledby="downloadTitle">
+  <div class="modal-head"><div><span class="eyebrow">SECURE FILE RECOVERY</span><h2 id="downloadTitle">Unlock your file</h2></div><button class="close-button" data-action="close-download" aria-label="Close">×</button></div>
+  <div id="unlockStage"><p class="muted">Enter the file's encryption password. It is used locally and never submitted to the server.</p>
+    <form id="unlockForm"><label for="decryptPassword">File password</label><input type="password" id="decryptPassword" autocomplete="off" required placeholder="Your file encryption password"><button class="button primary full" type="submit">Unlock in browser</button></form>
+  </div>
+  <div id="saveStage" hidden><p class="muted">The filename was decrypted locally. Your server will only remove its independent outer encryption layer.</p><div class="filename" id="decryptedName"></div><button class="button primary full" data-action="save-download">Save decrypted file</button><p class="micro">On Chromium, large downloads stream directly to disk. Other browsers use a memory-limited fallback.</p></div>
+  <div id="downloadProgress" hidden><h3>Decryption progress</h3><div class="metric"><span>1. Server removes ChaCha20-Poly1305 layer</span><output id="outerText">0%</output></div><progress id="outerProgress" max="100" value="0"></progress><div class="metric"><span>2. Browser removes AES-256-GCM layer</span><output id="innerText">0%</output></div><progress id="innerProgress" max="100" value="0"></progress><p id="downloadNote" class="muted micro" role="status"></p></div>
+</dialog>
+<dialog id="shareDialog" class="modal" aria-labelledby="shareTitle">
+  <div class="modal-head"><div><span class="eyebrow">TIME-LIMITED CAPABILITY</span><h2 id="shareTitle">Share encrypted file</h2></div><button class="close-button" data-action="close-share" aria-label="Close">×</button></div>
+  <div id="shareConfig"><p class="muted">The URL grants access to encrypted bytes only. Send the file password separately.</p><form id="shareForm"><label for="shareMinutes">Link duration</label><select id="shareMinutes"><option value="15">15 minutes</option><option value="60" selected>1 hour</option><option value="1440">1 day</option><option value="10080">7 days</option></select><label for="shareDownloads">Maximum downloads</label><input id="shareDownloads" type="number" min="1" max="100" value="1" required><button class="button primary full" type="submit">Create private sharing link</button></form></div>
+  <div id="shareResult" hidden><label for="shareUrl">Copy this link (token stored in URL fragment)</label><textarea id="shareUrl" readonly rows="3"></textarea><button class="button primary full" data-action="copy-link">Copy sharing link</button><p class="micro caution">Do not send the file password in the same message as this link. Existing download tickets are revoked when the link is revoked.</p></div><div class="existing-shares"><h3>Active and historical links</h3><div id="shareList"></div></div>
+</dialog>
+</body>
+</html>
