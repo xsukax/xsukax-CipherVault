@@ -141,4 +141,4 @@ xsukax-vault/
 └── .gitignore
 ```
 
-License: No license is implied; add a project-specific `LICENSE` before public distribution.
+License: GPL-3.0
